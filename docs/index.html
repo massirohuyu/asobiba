@@ -198,6 +198,12 @@
             onclick="openAlertDialog('alert_dialog', this)">
       Discard
     </button>
+    <button type="button"
+            aria-controls="notes"
+            id="notes_discard2"
+            onclick="openAlertDialog('alert_dialog', this, 'dialog_desc')">
+      Discard2
+    </button>
 
     <div role="alert"
          id="alert_toast"
@@ -214,7 +220,7 @@
         <h2 id="dialog_label" class="dialog_label">
           Confirmation
         </h2>
-        <div id="dialog_desc" class="dialog_desc">
+        <div tabindex="-1" id="dialog_desc" class="dialog_desc">
           <p>
             Are you sure you want to discard all of your notes?
           </p>
