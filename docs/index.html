@@ -175,7 +175,7 @@
 
     <h2>ViceOverのカーソルに移動に関しての実験</h2>
 
-    <textarea id="console" class="notes">ここにデバッグ内容が書かれます</textarea>
+    <textarea id="console" class="notes">ここにデバッグ内容が書かれます。フォーカスインに変更</textarea>
 
     <div id="menu" class="dialogbox">
       <span id="teleporterMenu1" class="teleporter" aria-controls="input" tabindex="0">tele</span>
@@ -207,7 +207,7 @@
         const isToFirst = teleporter.classList.contains('teleporter--toFirst');
         const isToLast = teleporter.classList.contains('teleporter--toLast');
 
-        teleporter.addEventListener('focus', ()=>{
+        teleporter.addEventListener('focusin', ()=>{
           const target = document.getElementById(teleporter.getAttribute('aria-controls'));
 
           if (!isToFirst && !isToLast) {
