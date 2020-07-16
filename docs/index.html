@@ -168,9 +168,66 @@
         transform: translateY(0);
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.19/lodash.min.js"></script>
   </head>
   <body>
     <h1>Asobiba</h1>
+
+    <h2>ViceOverのカーソルに移動に関しての実験</h2>
+
+    <textarea id="console" class="notes">ここにデバッグ内容が書かれます</textarea>
+
+    <div id="menu" class="dialogbox">
+      <span id="teleporterMenu1" class="teleporter" aria-controls="input" tabindex="0"></span>
+      <a href="#">ダミーリンク1</a>
+      <a href="#">ダミーリンク2</a>
+      <a href="#">ダミーリンク3</a>
+      <span id="teleporterMenu2" class="teleporter" aria-controls="input" tabindex="0"></span>
+    </div>
+
+    <a href="#">ダミーリンク1</a>
+    <a href="#">ダミーリンク2</a>
+    <a href="#">ダミーリンク3</a>
+
+    <span id="teleporterInput1" class="teleporter teleporter--toLast" aria-controls="menu" tabindex="0"></span>
+    <input id="input" aria-controls="menu" type="text">
+    <span id="teleporterInput2" class="teleporter teleporter--toFirst" aria-controls="menu" tabindex="0"></span>
+
+    <script>
+      const consoleLog = (str)=> {
+        const consoleElm = document.getElementById('console');
+        consoleElm.value = consoleElm.value + '\n' + str;
+      }
+
+      // タブキーでフォーカス可能な要素のみ
+      const tabFocusableSelector = 'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex="0"]:not(.teleporter)'
+
+      const teleporters = document.querySelectorAll('.teleporter');
+      teleporters.forEach((teleporter)=>{
+        const isToFirst = teleporter.classList.contains('teleporter--toFirst');
+        const isToLast = teleporter.classList.contains('teleporter--toLast');
+
+        teleporter.addEventListener('focus', ()=>{
+          const target = document.getElementById(teleporter.getAttribute('aria-controls'));
+
+          if (!isToFirst && !isToLast) {
+            target && target.focus()
+
+          } else {
+            childlen = target && target.querySelectorAll(tabFocusableSelector);
+            let target2
+            if (childlen)
+              target2 = isToFirst ? childlen[0] : _.last(childlen);
+            target2 && target2.focus()
+          }
+              
+          consoleLog('フォーカスしました：' + teleporter.id)
+          consoleLog(teleporter.getAttribute('aria-controls') + ' に遷移します')
+          isToFirst && consoleLog('先頭です')
+          isToLast && consoleLog('末尾です')
+        })
+      })
+    </script>
 
     <h2>ViceOverの自前ダイアログのアクセシビリティに関しての実験</h2>
 
