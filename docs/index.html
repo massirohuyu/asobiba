@@ -175,19 +175,37 @@
 
     <h2>ViceOverのカーソルに移動に関しての実験</h2>
 
-    <textarea id="console" class="notes">ここにデバッグ内容が書かれます。フォーカスインに変更</textarea>
+    <p>コンボボックスコンポーネントを想定して、入力要素の次のフォーカス位置を選択肢の先頭にもっていきたかったが、VoiceOverではfocusもfocusinもカーソル移動時に発火しなかった。</p>
 
-    <div id="menu" class="dialogbox">
+    <textarea id="console" class="notes">ここにデバッグ内容が書かれます。</textarea>
+
+    <div id="menu" class="dialogbox" style="padding: 1em; border: solid #000 1px;">
       <span id="teleporterMenu1" class="teleporter" aria-controls="input" tabindex="0">tele</span>
-      <a href="#">ダミーリンク1</a>
-      <a href="#">ダミーリンク2</a>
-      <a href="#">ダミーリンク3</a>
+      <ul>
+        <li>
+          <a href="#">メニュー1</a>
+        </li>
+        <li>
+          <a href="#">メニュー2</a>
+        </li>
+        <li>
+          <a href="#">メニュー3</a>
+        </li>
+      </ul>
       <span id="teleporterMenu2" class="teleporter" aria-controls="input" tabindex="0">tele</span>
     </div>
 
-    <a href="#">ダミーリンク1</a>
-    <a href="#">ダミーリンク2</a>
-    <a href="#">ダミーリンク3</a>
+    <ul>
+      <li>
+        <a href="#">ダミーリンク1</a>
+      </li>
+      <li>
+        <a href="#">ダミーリンク2</a>
+      </li>
+      <li>
+        <a href="#">ダミーリンク3</a>
+      </li>
+    </ul>
 
     <span id="teleporterInput1" class="teleporter teleporter--toLast" aria-controls="menu" tabindex="0">tele</span>
     <input id="input" aria-controls="menu" type="text">
