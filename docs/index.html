@@ -169,13 +169,38 @@
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.19/lodash.min.js"></script>
+
+    <script>
+      var aria = aria || {};
+
+      aria.consoleLog = (str)=> {
+        const consoleElm = document.getElementById('console');
+        consoleElm.value = consoleElm.value + '\n' + str;
+      }
+    </script>
   </head>
   <body>
     <h1>Asobiba</h1>
 
+    <textarea id="console" class="notes">ここにデバッグ内容が書かれます。</textarea>
+
+    <h2>ブラウザバック時にキャッシュ利用しているか否かの制御に関する実験</h2>
+
+    <p>参考:<a href="https://qiita.com/shibe23/items/79f950061457ff1a7687">https://qiita.com/shibe23/items/79f950061457ff1a7687</a></p>
+
+    <script>
+      window.addEventListener("pageshow", function(event){
+        if (event.persisted) {
+          aria.consoleLog('おや、キャッシュを利用してるみたいですよ！')
+        }
+      });
+    </script>
+
     <h2>ページ内リンクにおけるViceOverのカーソルに移動に関しての実験</h2>
 
     <p>参考:https://accessphilia.com/ja/blog/vo-link-within-page-2</p>
+
+    <p>この環境内ではカーソルが移動しない現象を再現できないかもしれない…？</p>
 
     <a href="#maintarget">mainへ遷移</a>
 
@@ -200,8 +225,6 @@
     <h2>ViceOverのカーソルに移動に関しての実験</h2>
 
     <p>コンボボックスコンポーネントを想定して、入力要素の次のフォーカス位置を選択肢の先頭にもっていきたかったが、VoiceOverではfocusもfocusinもカーソル移動時に発火しなかった。</p>
-
-    <textarea id="console" class="notes">ここにデバッグ内容が書かれます。</textarea>
 
     <div id="menu" class="dialogbox" style="padding: 1em; border: solid #000 1px;">
       <span id="teleporterMenu1" class="teleporter" aria-controls="input" tabindex="0">tele</span>
@@ -236,11 +259,6 @@
     <span id="teleporterInput2" class="teleporter teleporter--toFirst" aria-controls="menu" tabindex="0">tele</span>
 
     <script>
-      const consoleLog = (str)=> {
-        const consoleElm = document.getElementById('console');
-        consoleElm.value = consoleElm.value + '\n' + str;
-      }
-
       // タブキーでフォーカス可能な要素のみ
       const tabFocusableSelector = 'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex="0"]:not(.teleporter)'
 
@@ -263,10 +281,10 @@
             target2 && target2.focus()
           }
               
-          consoleLog('フォーカスしました：' + teleporter.id)
-          consoleLog(teleporter.getAttribute('aria-controls') + ' に遷移します')
-          isToFirst && consoleLog('先頭です')
-          isToLast && consoleLog('末尾です')
+          aria.consoleLog('フォーカスしました：' + teleporter.id)
+          aria.consoleLog(teleporter.getAttribute('aria-controls') + ' に遷移します')
+          isToFirst && aria.consoleLog('先頭です')
+          isToLast && aria.consoleLog('末尾です')
         })
       })
     </script>
