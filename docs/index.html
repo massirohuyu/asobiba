@@ -186,14 +186,22 @@
 
     <h2>ブラウザバック時にキャッシュ利用しているか否かの制御に関する実験</h2>
 
+    <button onclick="increaseBrowserBackValue()">browserBackValue+1</button>
+
     <p>参考:<a href="https://qiita.com/shibe23/items/79f950061457ff1a7687">https://qiita.com/shibe23/items/79f950061457ff1a7687</a></p>
 
     <script>
+      window.aria.browserBackValue = 0
       window.addEventListener("pageshow", function(event){
         if (event.persisted) {
           aria.consoleLog('おや、キャッシュを利用してるみたいですよ！')
         }
       });
+
+      function increaseBrowserBackValue () {
+        window.aria.browserBackValue++
+        aria.consoleLog('browserBackValue:' + window.aria.browserBackValue)
+      }
     </script>
 
     <h2>ページ内リンクにおけるViceOverのカーソルに移動に関しての実験</h2>
