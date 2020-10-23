@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Asobiba</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+      .Pomodoro_timerDisplay {
+        font-size: 5rem;
+      }
+    </style>
+
+    <body>
+      <h1>pomodoroTimer</h1>
+
+      <div id="app">
+        <div class="Pomodoro">
+          <div>
+            {{ isReseted ? "Next is" : "Now is" }}
+            {{ isBreak ? "break time" : "working time" }}
+          </div>
+          <div><label>Count#:<input type="number" v-model="count" /></label></div>
+          <div class="Pomodoro_timerDisplay"><time>{{ settedTime ? settedTime.display : "no time setted" }}</time></div>
+          <div v-if="isCompleted">Completed!!</div>
+
+          <div class="Pomodoro_section">
+            <h2>buttons:</h2>
+            <button :disabled="isRunning" @click="start">Start</button>
+            <button :disabled="!isRunning" @click="pause">Pause</button>
+            <button @click="reset">Reset</button>
+          </div>
+
+          <div class="Pomodoro_section">
+            <h2>configs:</h2>
+            <div><label>workMinutes:<input type="number" v-model="config.workMinutes" /></label></div>
+            <div><label>breakMinute:<input type="number" v-model="config.breakMinute" /></label></div>
+            <div><label>isWorkFirst:<input type="checkbox" v-model="config.isWorkFirst" /></label></div>
+            <div><label>autoRunNext:<input type="checkbox" v-model="config.autoRunNext" /></label></div>
+          </div>
+
+          <div class="Pomodoro_section">
+            <h2>tasks:</h2>
+            <ul>
+              <li>configをlocalstrageに保存</li>
+              <li>count数をworkingとbreakに分ける</li>
+              <li>完了時に通知＋音を鳴らす</li>
+              <li>running時にタブアイコンの色を視認しやすくする</li>
+              <li>時計盤を視認しやすくする</li>
+              <li>画面上でもrunning中か否か、breakかworkingかを視認しやすくする</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </body>
+
+    <script>
+      (function () {
+        // TimeInfo定義
+        class TimeInfo {
+          constructor (date) {
+            this.date = date ? date : new Date("2000-01-01T00:00:00");
+          }
+
+          get display () {
+            return this.date ? this.date.toLocaleTimeString() : null;
+          }
+          
+          get hours () {
+            return this.date ? this.date.getHours() : null;
+          }
+
+          get seconds () {
+            return this.date ? this.date.getSeconds() : null;
+          }
+          
+          get minutes () {
+            return this.date ? this.date.getMinutes() : null;
+          }
+          set minutes (minutes) {
+            this.date.setMinutes(minutes)
+          }
+          
+          get milliseconds () {
+            return this.date ? this.date.getMilliseconds() : null;
+          }
+
+          add (date) {
+            this.date.setTime(this.date.getTime() + date.getTime())
+          }
+
+          subtract (date) {
+            this.date.setTime(this.date.getTime() - date.getTime())
+          }
+
+          getDiff (date) {
+            const diff = date.getTime() - this.date.getTime();
+            const diffDate = new Date();
+            diffDate.setTime(diff);
+
+            return diffDate;
+          }
+        }
+
+        const baseTime = new TimeInfo();
+
+        // Vue init
+        var vm = new Vue({
+          el: "#app",
+          data: {
+            config: {
+              workMinutes: 30,
+              breakMinute: 5,
+              isWorkFirst: true,
+              autoRunNext: true,
+            },
+            count: 0,
+            isBreak: false,
+            isReseted: true,
+            isCompleted: false,
+
+            prevTime: null, // timeInfo
+            settedTime: null, // timeInfo
+            
+            timeoutId: null
+          },
+          computed: {
+            isRunning () {
+              return this.timeoutId
+            }
+          },
+          created () {
+            this.isBreak = !this.config.isWorkFirst
+            
+            this.reset();
+          },
+          methods: {
+            initSettedMinutes () {
+              const settedTime = new TimeInfo();
+
+              if (this.isBreak)
+                settedTime.minutes = this.config.breakMinute;
+              else
+                settedTime.minutes = this.config.workMinutes;
+              
+              this.settedTime = settedTime;
+            },
+
+            start () {
+              this.prevTime = new TimeInfo(new Date());
+              this.timeoutId = setTimeout(this.addToSettledTime, 100);
+              this.isReseted = false
+            },
+
+            pause () {
+              this.stopTimer()
+            },
+            
+            reset () {
+              this.stopTimer()
+              this.initSettedMinutes()
+              this.isReseted = true
+            },
+
+            addToSettledTime () {
+              const settedTime = this.settedTime,
+                    prevTime = this.prevTime,
+                    currentTime = new TimeInfo(new Date());
+              
+              this.prevTime = currentTime;
+              
+              if (!prevTime || !settedTime) return
+              
+              const diffDate = prevTime.getDiff(currentTime.date);
+              settedTime.subtract(diffDate);
+
+              if (settedTime.date <= baseTime.date)
+                this.doneAndNext()
+              else
+                this.timeoutId = setTimeout(this.addToSettledTime, 100);
+            },
+
+            stopTimer () {
+              clearTimeout(this.timeoutId)
+              this.timeoutId = null
+              this.prevTime = null;
+            },
+
+            doneAndNext () {
+              this.count++
+              this.isBreak = !this.isBreak
+              this.reset()
+              
+              if (this.config.autoRunNext)
+                this.start()
+            }
+          }
+        })
+      })();
+    </script>
+  </html>
+  
