@@ -44,10 +44,11 @@
             <ul>
               <li>configをlocalstrageに保存</li>
               <li>count数をworkingとbreakに分ける</li>
-              <li>完了時に通知＋音を鳴らす</li>
+              <li>完了時に通知＋音を鳴らす(nodeとかで立ち上げないとだめそう)</li>
               <li>running時にタブアイコンの色を視認しやすくする</li>
               <li>時計盤を視認しやすくする</li>
               <li>画面上でもrunning中か否か、breakかworkingかを視認しやすくする</li>
+              <li>自動で次のポモドーロを始めるかどうかをbreakとworkでわけて設定できるようにする</li>
             </ul>
           </div>
         </div>
@@ -130,9 +131,12 @@
             }
           },
           created () {
+            // アプリ初期化
             this.isBreak = !this.config.isWorkFirst
-            
             this.reset();
+
+            // 通知確認
+            this.notificationPermission()
           },
           methods: {
             initSettedMinutes () {
@@ -187,12 +191,27 @@
             },
 
             doneAndNext () {
+              this.notificationComplete()
+
               this.count++
               this.isBreak = !this.isBreak
               this.reset()
               
               if (this.config.autoRunNext)
                 this.start()
+            },
+
+            // notifications
+
+            notificationPermission () {
+              Notification.requestPermission().then(function(result) {
+                Notification.permission = result;
+              });
+            },
+
+            notificationComplete () {
+              const what = this.isBreak ? "Break" : "Working";
+              new Notification( what + ' pomodoro is done', {body: what});
             }
           }
         })
