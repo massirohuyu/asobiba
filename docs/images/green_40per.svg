@@ -1,0 +1,6 @@
+<svg width="50" height="50"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <circle cx="25" cy="25" r="16" stroke="rgba(0,0,0,.1)" fill="transparent" stroke-width="14"/>
+    <circle cx="25" cy="25" r="16" stroke="#76cc34" fill="transparent" stroke-width="14" stroke-dasharray="40 100" transform="rotate(-90, 25, 25)"/>
+</svg>

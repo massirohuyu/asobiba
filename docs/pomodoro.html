@@ -5,6 +5,7 @@
     <title>Asobiba</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="shortcut icon" href="./images/green_100per.svg" id="fav">
     <style>
       .Pomodoro_timerDisplay {
         font-size: 5rem;
@@ -111,12 +112,13 @@
           el: "#app",
           data: {
             config: {
-              workMinutes: 30,
-              breakMinute: 5,
+              workMinutes: 50,
+              breakMinute: 10,
               isWorkFirst: true,
               autoRunNext: true,
             },
             count: 0,
+            settedMinutes: false,
             isBreak: false,
             isReseted: true,
             isCompleted: false,
@@ -124,7 +126,9 @@
             prevTime: null, // timeInfo
             settedTime: null, // timeInfo
             
-            timeoutId: null
+            timeoutId: null,
+
+            favicon: document.getElementById('fav')
           },
           computed: {
             isRunning () {
@@ -142,13 +146,15 @@
           methods: {
             initSettedMinutes () {
               const settedTime = new TimeInfo();
-
-              if (this.isBreak)
-                settedTime.minutes = this.config.breakMinute;
-              else
-                settedTime.minutes = this.config.workMinutes;
+              const settedMinutes = this.isBreak ?
+                                    this.config.breakMinute :
+                                    this.config.workMinutes;
+              
+              settedTime.minutes = settedMinutes;
+              this.settedMinutes = settedMinutes;
               
               this.settedTime = settedTime;
+              this.setFavicon(100)
             },
 
             start () {
@@ -179,6 +185,8 @@
               const diffDate = prevTime.getDiff(currentTime.date);
               settedTime.subtract(diffDate);
 
+              this.calcAndSetFavicon(settedTime) // faviconセット
+
               if (settedTime.date <= baseTime.date)
                 this.doneAndNext()
               else
@@ -200,6 +208,31 @@
               
               if (this.config.autoRunNext)
                 this.start()
+            },
+
+            // favicons
+
+            calcAndSetFavicon (timeInfo) {
+              const settedMinutes = this.settedMinutes;
+              const settedSeconds = settedMinutes*60
+              const currentSeconds = timeInfo.minutes*60 + timeInfo.seconds
+
+              let persent = (settedSeconds - currentSeconds)*100 / settedSeconds
+              
+              if (persent < 20) {
+                persent = 5
+
+              } else {
+                const ratePer20 = Math.floor(persent / 20)
+                persent = ratePer20 * 20
+              }
+
+              this.setFavicon(persent)
+            },
+
+            setFavicon (persent) {
+              const color = "green";
+              this.favicon.href = `./images/${color}_${persent}per.svg`
             },
 
             // notifications
