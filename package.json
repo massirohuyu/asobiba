@@ -1,0 +1,25 @@
+{
+  "name": "asobiba",
+  "version": "1.0.0",
+  "description": "my asobiba",
+  "main": "script.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node script.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/massirohuyu/asobiba.git"
+  },
+  "author": "seino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/massirohuyu/asobiba/issues"
+  },
+  "homepage": "https://github.com/massirohuyu/asobiba#readme",
+  "devDependencies": {
+    "express": "^4.17.1"
+  }
+}
