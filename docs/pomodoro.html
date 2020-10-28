@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="/javascripts/TimeInfo.js"></script>
+    <script src="/javascripts/ProgressCircle.js"></script>
     <link rel="shortcut icon" href="./images/green_100per.svg" id="fav">
     <style>
       .Pomodoro_timerDisplay {
@@ -32,7 +33,11 @@
             {{ isBreak ? "break time" : "working time" }}
           </div>
           <div><label>Count#:<input type="number" v-model="count" /></label></div>
-          <div class="Pomodoro_timerDisplay"><time>{{ settedTime ? settedTime.display : "no time setted" }}</time></div>
+          <div
+            class="Pomodoro_timerDisplay"
+            :style="{'border-color': isBreak ? config.colors.break : config.colors.working}">
+            <time>{{ settedTime ? settedTime.display : "no time setted" }}</time>
+          </div>
           <div v-if="isCompleted">Completed!!</div>
 
           <div class="Pomodoro_section">
@@ -81,6 +86,12 @@
               breakMinute: 10,
               isWorkFirst: true,
               autoRunNext: true,
+              colors: {
+                working: "#e68484",
+                break: "#b1da91",
+                workingProgress: "#e06464",
+                breakProgress: "#76cc34"
+              }
             },
             count: 0,
             settedMinutes: false,
@@ -93,13 +104,16 @@
             
             timeoutId: null,
 
-            favicon: document.getElementById('fav')
+            favicon: document.getElementById('fav'),
+            progressCircel: new ProgressCircle()
           },
+
           computed: {
             isRunning () {
               return this.timeoutId
-            }
+            },
           },
+          
           created () {
             // アプリ初期化
             this.isBreak = !this.config.isWorkFirst
@@ -188,21 +202,15 @@
               const currentSeconds = timeInfo.minutes*60 + timeInfo.seconds
 
               let persent = (settedSeconds - currentSeconds)*100 / settedSeconds
-              
-              if (persent < 20) {
-                persent = 5
-
-              } else {
-                const ratePer20 = Math.floor(persent / 20)
-                persent = ratePer20 * 20
-              }
 
               this.setFavicon(persent)
             },
 
             setFavicon (persent) {
-              const color = "green";
-              this.favicon.href = `./images/${color}_${persent}per.svg`
+              this.favicon.href = this.progressCircel.generate({
+                color: this.isBreak ? this.config.colors.breakProgress : this.config.colors.workingProgress,
+                percent: persent
+              })
             },
 
             // notifications
