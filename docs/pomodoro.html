@@ -40,6 +40,7 @@
             <button :disabled="isRunning" @click="start">Start</button>
             <button :disabled="!isRunning" @click="pause">Pause</button>
             <button @click="reset">Reset</button>
+            <button :disabled="!isReseted" @click="toggle">toggle</button>
           </div>
 
           <div class="Pomodoro_section">
@@ -135,6 +136,11 @@
               this.stopTimer()
               this.initSettedMinutes()
               this.isReseted = true
+            },
+
+            toggle () {
+              this.isBreak = !this.isBreak
+              this.initSettedMinutes()
             },
 
             addToSettledTime () {
