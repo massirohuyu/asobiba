@@ -5,13 +5,14 @@
     <title>Asobiba</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/javascripts/TimeInfo.js"></script>
     <link rel="shortcut icon" href="./images/green_100per.svg" id="fav">
     <style>
       .Pomodoro_timerDisplay {
         display: inline-block;
         padding: 15px;
         margin: 10px 0;
-        
+
         border: 5px solid #ddd;
         border-radius: 10px;
 
@@ -68,52 +69,6 @@
 
     <script>
       (function () {
-        // TimeInfo定義
-        class TimeInfo {
-          constructor (date) {
-            this.date = date ? date : new Date("2000-01-01T00:00:00");
-          }
-
-          get display () {
-            return this.date ? this.date.toLocaleTimeString() : null;
-          }
-          
-          get hours () {
-            return this.date ? this.date.getHours() : null;
-          }
-
-          get seconds () {
-            return this.date ? this.date.getSeconds() : null;
-          }
-          
-          get minutes () {
-            return this.date ? this.date.getMinutes() : null;
-          }
-          set minutes (minutes) {
-            this.date.setMinutes(minutes)
-          }
-          
-          get milliseconds () {
-            return this.date ? this.date.getMilliseconds() : null;
-          }
-
-          add (date) {
-            this.date.setTime(this.date.getTime() + date.getTime())
-          }
-
-          subtract (date) {
-            this.date.setTime(this.date.getTime() - date.getTime())
-          }
-
-          getDiff (date) {
-            const diff = date.getTime() - this.date.getTime();
-            const diffDate = new Date();
-            diffDate.setTime(diff);
-
-            return diffDate;
-          }
-        }
-
         const baseTime = new TimeInfo();
 
         // Vue init
