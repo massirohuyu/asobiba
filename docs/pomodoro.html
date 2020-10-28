@@ -14,8 +14,8 @@
         padding: 15px;
         margin: 10px 0;
 
-        border: 5px solid #ddd;
         border-radius: 10px;
+        background-color: #ddd;
 
         font-size: 5rem;
         font-weight: bold;
@@ -35,7 +35,7 @@
           <div><label>Count#:<input type="number" v-model="count" /></label></div>
           <div
             class="Pomodoro_timerDisplay"
-            :style="{'border-color': isBreak ? config.colors.break : config.colors.working}">
+            :style="{'background-color': isBreak ? config.colors.break : config.colors.working}">
             <time>{{ settedTime ? settedTime.display : "no time setted" }}</time>
           </div>
           <div v-if="isCompleted">Completed!!</div>
