@@ -33,3 +33,26 @@ app.listen(8001, ()=> {
 ```
 npm start
 ```
+
+foreverを入れて簡単に起動、停止
+---
+
+インストール
+```
+npm install -g forever
+```
+
+なぜか「スクリプトの実行が無効」エラーが出るので、ポリシーを変える必要がある
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+```
+
+スタート
+```
+forever start script.js
+```
+
+ストップ
+```
+forever stop script.js
+```
