@@ -62,7 +62,7 @@
             <ul>
               <li>configをlocalstrageに保存</li>
               <li>count数をworkingとbreakに分ける</li>
-              <li><del>完了時に通知</del>＋音を鳴らす(nodeとかで立ち上げないとだめそう)</li>
+              <li><del>完了時に通知＋音を鳴らす(nodeとかで立ち上げないとだめそう) </del>⇒お借りしたベル音：https://otologic.jp/free/se/ding01.html</li>
               <li><del>running時にタブアイコンの色を視認しやすくする</del></li>
               <li><del>r時計盤を視認しやすくする</del></li>
               <li>画面上でもrunning中か否か、breakかworkingかを視認しやすくする</li>
@@ -106,7 +106,11 @@
             timeoutId: null,
 
             favicon: document.getElementById('fav'),
-            progressCircel: new ProgressCircle()
+            progressCircel: new ProgressCircle(),
+
+            sounds: {
+              bell: new Audio('sounds/Onmtp-Ding05-1.mp3')
+            }
           },
 
           computed: {
@@ -186,6 +190,7 @@
 
             doneAndNext () {
               this.notificationComplete()
+              this.playSound("bell")
 
               this.count++
               this.isBreak = !this.isBreak
@@ -225,7 +230,14 @@
             notificationComplete () {
               const what = this.isBreak ? "Break" : "Working";
               new Notification( what + ' pomodoro is done', {body: what});
-            }
+            },
+
+            // sounds
+
+            playSound (name) {
+              const sound = this.sounds[name]
+              sound && sound.play()
+            },
           }
         })
       })();
