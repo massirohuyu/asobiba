@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Routines</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script src="http://cdn.date-fns.org/v1.9.0/date_fns.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../javascripts/plugins/StoragesPlugin.js"></script>
+    <script src="./javascripts/main.js"></script>
+    <script src="./javascripts/models/Category.js"></script>
+    <script src="./javascripts/models/Place.js"></script>
+    <script src="./javascripts/models/Frecuency.js"></script>
+    <script src="./javascripts/models/Routine.js"></script>
+    <link rel="stylesheet" href="./stylesheets/main.css">
+    <link rel="shortcut icon" href="../images/green_100per.svg" id="fav">
+    <style>
+    </style>
+
+    <body>
+      <div id="app">
+        <h1>Routines</h1>
+  
+        <co-button @click="createNewRoutine">
+          新しいルーチンを追加
+        </co-button>
+
+        <form v-if="newRoutine" @submit.prevent="addNewRoutine">
+          <h2>新しいルーチン</h2>
+          <div>
+            <label for="new-name">ルーチン名</label>
+            <input id="new-name" type="text" v-model="newRoutine.name">
+          </div>
+          
+          <div role="group" aria-labelledby="new-frecuency-label">
+            <div id="new-frecuency-label">ルーチン間隔</div> 
+
+            <!-- <div role="group" aria-labelledby="new-frecuency-type-label">
+              <div id="new-frecuency-type-label">ルーチン間隔区分</div> 
+              <input type="radio" id="new-frecuency-type-dates" name="frecuency.type" value="1" v-model="frecuency.type">
+              <label for="new-frecuency-type-dates">前回からの日数</label>
+              <input type="radio" id="new-frecuency-type-days" name="frecuency.type" value="2" v-model="frecuency.type">
+              <label for="new-frecuency-type-dates">指定年月日または曜日・週</label>
+            </div> -->
+
+            <select id="new-frecuency-months" aria-label="月の間隔" v-model="newRoutine.frecuency.months">
+              <option :value="0">0ヶ月</option>
+              <option v-for="i in 12" :value="i" :key="i">{{i}}ヶ月</option>
+            </select>
+            <select id="new-frecuency-weeks" aria-label="週の間隔" v-model="newRoutine.frecuency.weeks">
+              <option :value="0">0週間</option>
+              <option v-for="i in 6" :value="i" :key="i">{{i}}週間</option>
+            </select>
+            <select id="new-frecuency-dates" aria-label="日の間隔" v-model="newRoutine.frecuency.dates">
+              <option :value="0">0日</option>
+              <option v-for="i in 31" :value="i" :key="i">{{i}}日</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="new-category-id">カテゴリー</label>
+            <select id="new-category-id" v-model="newRoutine.categoryId">
+              <option v-for="category in categories" :value="category.id" :key="category.id">{{category.name}}</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="new-place-id">場所</label>
+            <select id="new-place-id" v-model="newRoutine.placeId">
+              <option v-for="place in places" :value="place.id" :key="place.id">{{place.name}}</option>
+            </select>
+          </div>
+          
+          <div>
+            <co-button type="submit">
+              追加
+            </co-button>
+          </div>
+        </form>
+
+        <section>
+          <h2>ルーチン一覧</h2>
+
+          <ul>
+            <li v-for="routine in routines" :key="routine.id">
+              {{　routine.name　}} - <display-frecuency :value="routine.frecuency"></display-frecuency>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </body>
+    
+    <script type="text/x-template" id="co-button">
+      <button :type="type" class="CoButton" v-on="$listeners"><div class="CoButton_content"><slot></slot></div></button>
+    </script>
+
+    <script type="text/x-template" id="display-frecuency">
+      <span>
+        {{ value.months ? value.months+"ヶ月" :"" }}{{ value.weeks ? value.weeks+"週間" :"" }}{{ value.dates ? value.dates+"日" :"" }}
+      </span>
+    </script>
+
+    <script>
+      (function () {
+        // Vue components
+        Vue.component('co-button', {
+          template: '#co-button',
+          props: {
+            type: {
+              type: String,
+              default: 'button'
+            }
+          }
+        })
+
+        Vue.component('display-frecuency', {
+          template: '#display-frecuency',
+          props: {
+            value: {
+              type: Object,
+              default: ()=>{return{}}
+            }
+          }
+        })
+
+        // Vue init
+        var vm = new Vue({
+          el: "#app",
+          data: {
+            // models
+            routines: [],
+            categories: [],
+            places: [],
+
+            // routine
+            newRoutine: null,
+
+            // 一時的
+            categorylist: [
+              {id: 1, name: '食事'},
+              {id: 2, name: '整頓'},
+              {id: 3, name: '清掃'},
+              {id: 4, name: 'ゴミ捨て'},
+              {id: 99, name: 'その他'},
+            ],
+            placelist: [
+              {id: 1, name: '居間'},
+              {id: 2, name: 'トイレ'},
+              {id: 3, name: '玄関'},
+              {id: 4, name: '廊下・階段'},
+              {id: 5, name: '寝室'},
+              {id: 6, name: 'キッチン'},
+              {id: 7, name: '洗面所'},
+              {id: 8, name: '風呂'},
+              {id: 9, name: '2階部屋大'},
+              {id: 10, name: '2階部屋小'},
+              {id: 11, name: '庭'},
+              {id: 12, name: '倉庫'},
+            ]
+          },
+
+          computed: {
+            expiredRoutines () {
+
+            }
+          },
+          
+          created () {
+            this.init();
+            this.reset();
+          },
+
+          methods: {
+            init () {
+              const createInstanceArray = this.createInstanceArray;
+              // categories、placesに取得したリストをセット
+              createInstanceArray(Routine, 'routines', this.loadRoutines() || []);
+              createInstanceArray(Category, 'categories', this.categorylist);
+              createInstanceArray(Place, 'places', this.placelist);
+            },
+
+            reset () {
+
+            },
+
+            createNewRoutine () {
+              this.newRoutine = new Routine();
+            },
+
+            addNewRoutine () {
+              this.saveRoutine(this.newRoutine)
+              this.newRoutine = null
+            },
+
+            //save and load
+            saveRoutine (routine) {
+              this.routines.push(routine)
+              StoragesPlugin.setLocal('routines', this.routines)
+            },
+
+            loadRoutines () {
+              return StoragesPlugin.getLocal('routines')
+            },
+
+            // util
+            createInstanceArray (klass, dataName, list) {
+              this[dataName] = _.map(list, (config)=> new klass(config));
+            }
+          }
+        })
+      })();
+    </script>
+
+  </html>
+  

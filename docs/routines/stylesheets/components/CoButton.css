@@ -1,0 +1,16 @@
+.CoButton {
+  background: #ddd;
+  border: solid 1px #bbb;
+  border-radius: .3rem;
+
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .2);
+  transition: box-shadow .3s;
+}
+
+.CoButton:hover {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
+}
+
+.CoButton .CoButton_content {
+  padding: .3rem;
+}
