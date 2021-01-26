@@ -266,6 +266,28 @@
     <input id="input" aria-controls="menu" type="text">
     <span id="teleporterInput2" class="teleporter teleporter--toFirst" aria-controls="menu" tabindex="0">tele</span>
 
+    <h2>role="listbox"の実験</h2>
+
+    <label id="listbox1_label">好きな食べ物 :</label>
+    <div id="listbox1"
+        tabindex="0"
+        role="listbox"
+        aria-labelledby="listbox1_label"
+    >
+      <div id="listbox1_1" role="option" aria-selected="true">
+        みかん
+      </div>
+      <div id="listbox1_2" role="option">
+        バナナ
+      </div>
+      <div id="listbox1_3" role="option">
+        キウイ
+      </divli>
+      <div id="listbox1_4" role="option">
+        いちご
+      </div>
+    </div>
+
     <script>
       // タブキーでフォーカス可能な要素のみ
       const tabFocusableSelector = 'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex="0"]:not(.teleporter)'
