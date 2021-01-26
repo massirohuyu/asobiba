@@ -31,6 +31,10 @@
         }
       }
 
+      [role="option"][aria-selected="true"] {
+        background-color: rgba(116, 192, 243, 0.5)
+      }
+
       .dialog_label {
         text-align: center;
       }
@@ -273,20 +277,30 @@
         tabindex="0"
         role="listbox"
         aria-labelledby="listbox1_label"
+        aria-multiselectable="true"
     >
-      <div id="listbox1_1" role="option" aria-selected="true">
+      <div id="listbox1_1" role="option">
         みかん
       </div>
-      <div id="listbox1_2" role="option">
+      <div id="listbox1_2" role="option" aria-selected="true">
         バナナ
       </div>
       <div id="listbox1_3" role="option">
         キウイ
-      </divli>
+      </div>
       <div id="listbox1_4" role="option">
         いちご
       </div>
     </div>
+    
+    <script>
+      var listboxOpts = document.querySelectorAll('[role="option"]')
+      listboxOpts.forEach((opt)=>{
+        opt.addEventListener('click', (e)=>{
+          opt.setAttribute('aria-selected', opt.getAttribute('aria-selected') !== 'true')
+        })
+      })
+    </script>
 
     <script>
       // タブキーでフォーカス可能な要素のみ
