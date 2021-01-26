@@ -272,7 +272,7 @@
 
     <h2>role="listbox"の実験</h2>
 
-    <label id="listbox1_label">好きな食べ物 :</label>
+    <label id="listbox1_label">（div）好きな食べ物 :</label>
     <div id="listbox1"
         tabindex="0"
         role="listbox"
@@ -292,6 +292,27 @@
         いちご
       </div>
     </div>
+
+    <label id="listbox2_label">（ul）好きな動物 :</label>
+    <ul id="listbox2"
+        tabindex="0"
+        role="listbox"
+        aria-labelledby="listbox2_label"
+        aria-multiselectable="true"
+    >
+      <li id="listbox2_1" role="option">
+        ねこ
+      </li>
+      <li id="listbox2_2" role="option" aria-selected="true">
+        いぬ
+      </li>
+      <li id="listbox2_3" role="option">
+        キウイ  
+      </li>
+      <li id="listbox2_4" role="option">
+        文鳥
+      </li>
+    </ul>
     
     <script>
       var listboxOpts = document.querySelectorAll('[role="option"]')
