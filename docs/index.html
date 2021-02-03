@@ -271,6 +271,25 @@
     <span id="teleporterInput2" class="teleporter teleporter--toFirst" aria-controls="menu" tabindex="0">tele</span>
 
     <h2>role="listbox"の実験</h2>
+    
+    <div>
+      <button type="button"
+                aria-haspopup="listbox"
+                aria-labelledby="listbox2_label listbox2_button"
+                aria-expanded="true"
+                aria-controls="listbox2"
+                id="listbox2_button">
+        いぬ
+      </button>
+      <input role="searchbox"
+              type="search"
+              aria-haspopup="listbox"
+              aria-labelledby="listbox2_label listbox2_search"
+              aria-expanded="true"
+              aria-controls="listbox2"
+              aria-label="選択肢の絞り込み"
+              id="listbox2_search">
+    </div>
 
     <label id="listbox1_label">（div）好きな食べ物 :</label>
     <div id="listbox1"
@@ -278,6 +297,7 @@
         role="listbox"
         aria-labelledby="listbox1_label"
         aria-multiselectable="true"
+        aria-hidden="true"
     >
       <div id="listbox1_1" role="option">
         みかん
@@ -313,6 +333,8 @@
         文鳥
       </li>
     </ul>
+
+    <div>メモ：</div>
     
     <script>
       var listboxOpts = document.querySelectorAll('[role="option"]')
@@ -420,6 +442,18 @@
         </div>
       </div>
     </div>
+
+    <h2>見出し内の階層と画像のaltの実験</h2>
+
+    <p>ダミー文章</p>
+
+    <h3><img src="./images/401988_s.jpg" style="width: 100px;" alt="直接見出しに入れた画像"></h3>
+
+    <p>ダミー文章</p>
+
+    <h3><span><img src="./images/401988_s.jpg" style="width: 100px;" alt="見出し内のspanに入れた画像"></span></h3>
+
+    <p>ダミー文章</p>
   </body>
 
   <script>
