@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>Asobiba</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    <!-- <link rel="icon" type="image/png" sizes="180x180" href="./apple-touch-icon.png">
-    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="./apple-touch-icon.png"> -->
+    <link rel="icon" type="image/png" sizes="180x180" href="./apple-touch-icon.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="./apple-touch-icon.png">
     <style>
       .hidden {
         display: none;
@@ -172,6 +172,24 @@
 
       .toast.active {
         transform: translateY(0);
+      }
+
+      /* safariのCSSハック実験 */
+      input[type="text"][readonly],
+      select[unselectable="on"] {
+          /* ここは全部適用されていい */
+          background-color: #e9e9e9;
+      }
+      /* 以下をiOS Safariだけにしたい */
+      @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          _::-webkit-full-page-media, _:future,
+          :root input[type="text"][readonly],
+          :root select[unselectable="on"] {
+            -webkit-appearance: none;
+            border-radius: 3px;
+            height: 3rem;
+            background-color: #f00;
+          }
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.19/lodash.min.js"></script>
@@ -491,6 +509,14 @@
     <h3>結論</h3>
     <p>svgのimg要素には　role="img"　の設定が必要。</p>
     <p>参考： https://ja.ojit.com/so/ios/3898366</p>
+
+    <h2>safariのCSSハック実験</h2>
+
+    <select name="csshack" title="CSS hack" unselectable="on" style="user-select: none;">
+      <option value="1">りんご</option>
+      <option value="2">ばなな</option>
+      <option value="3">キウイ</option>
+    </select>
   </body>
 
   <script>
