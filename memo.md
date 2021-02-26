@@ -56,3 +56,18 @@ forever start script.js
 ```
 forever stop script.js
 ```
+
+webpackでnode_modules内のファイルをまとめたりする
+---
+
+https://ics.media/entry/12140/
+参考に、webpack と　webpack-cliをinstall
+
+自己設定用にwebpack.config.jsを作成して、
+
+npx webpack
+
+ホットリロードはひとまず
+npx webpack --watch
+の方をつかう（webpack-dev-serverはつかわない）
+
