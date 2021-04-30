@@ -17,18 +17,26 @@
         margin: 10px 0;
 
         border-radius: 10px;
-        background-color: #ddd;
+        color: #fff;
+        text-shadow: 5px 5px rgba(0, 86, 140, .2);
 
         font-size: 5rem;
         font-weight: bold;
         line-height: 1em;
       }
+
+      input:not([type="checkbox"]):not([type="radio"]) {
+        background-color: rgba(255, 255, 255, .3);
+        border: rgba(0, 86, 140, .2)1px solid;
+        padding: .5em;
+        width: 3rem;
+      }
     </style>
 
     <body>
-      <h1>pomodoroTimer</h1>
-
       <div id="app">
+        <h1>pomodoroTimer</h1>
+  
         <div class="Pomodoro">
           <div>
             {{ isReseted ? "Next is" : "Now is" }}
