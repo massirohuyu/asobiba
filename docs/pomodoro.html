@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
     <script src="/javascripts/TimeInfo.js"></script>
     <script src="/javascripts/ProgressCircle.js"></script>
+    <script src="/javascripts/plugins/StoragesPlugin.js"></script>
     <link rel="shortcut icon" href="./images/green_100per.svg" id="fav">
     <style>
       .Pomodoro_timerDisplay {
@@ -47,6 +48,8 @@
             <button :disabled="!isRunning" @click="pause">Pause</button>
             <button @click="reset">Reset</button>
             <button :disabled="!isReseted" @click="toggle">toggle</button>
+            ｜
+            <button @click="saveStorage">save configs</button>
           </div>
 
           <div class="Pomodoro_section">
@@ -60,14 +63,15 @@
           <div class="Pomodoro_section">
             <h2>tasks:</h2>
             <ul>
-              <li>configをlocalstrageに保存</li>
+              <li><del>configをlocalstrageに保存</del></li>
               <li>count数をworkingとbreakに分ける</li>
               <li><del>完了時に通知＋音を鳴らす(nodeとかで立ち上げないとだめそう) </del>⇒お借りしたベル音：https://otologic.jp/free/se/ding01.html</li>
               <li><del>running時にタブアイコンの色を視認しやすくする</del></li>
               <li><del>r時計盤を視認しやすくする</del></li>
-              <li>画面上でもrunning中か否か、breakかworkingかを視認しやすくする</li>
+              <li>画面上でもrunning中か否か、breakかworkingかを視認しやすくする working:#ecacad,#5f4b5a breaking:#acd49e,#4e6964</li>
               <li>自動で次のポモドーロを始めるかどうかをbreakとworkでわけて設定できるようにする</li>
               <li>ページ遷移時に警告ダイアログを表示</li>
+              <li>実際の時刻で何時何分に開始して何時何分に終了したかなどのログをとりたい。とりあえずlocalstorageに保存して、次回表示時にも確認できるようにしたい。</li>
             </ul>
           </div>
         </div>
@@ -83,8 +87,8 @@
           el: "#app",
           data: {
             config: {
-              workMinutes: 50,
-              breakMinute: 10,
+              workMinutes: 25,
+              breakMinute: 5,
               isWorkFirst: true,
               autoRunNext: true,
               colors: {
@@ -120,6 +124,9 @@
           },
           
           created () {
+            // 設定復帰
+            this.loadStorage()
+
             // アプリ初期化
             this.isBreak = !this.config.isWorkFirst
             this.reset();
@@ -238,6 +245,19 @@
               const sound = this.sounds[name]
               sound && sound.play()
             },
+
+            // storage
+
+            saveStorage () {
+              StoragesPlugin.setLocal('config', this.config)
+            },
+
+            loadStorage () {
+              const config = StoragesPlugin.getLocal('config')
+              
+              if (config)
+                Object.assign(this.config, config)
+            }
           }
         })
       })();
